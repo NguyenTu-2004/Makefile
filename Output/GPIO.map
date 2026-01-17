@@ -1,0 +1,143 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00010000         xr
+RAM              0x20000000         0x00005000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD Output/main.o
+LOAD Output/GPIO.o
+LOAD Output/startup_stm32f10x_md.o
+
+.text           0x08000000      0x1dc
+ *(.isr_vector)
+ .isr_vector    0x08000000       0xec Output/startup_stm32f10x_md.o
+ *(.text*)
+ .text          0x080000ec       0x44 Output/main.o
+                0x0800010e                main
+ .text          0x08000130       0x68 Output/GPIO.o
+                0x08000130                GPIO_Init_PC13
+                0x08000168                GPIO_Set_PC13
+                0x08000180                GPIO_Reset_PC13
+ .text          0x08000198        0x0 Output/startup_stm32f10x_md.o
+ .text.Reset_Handler
+                0x08000198       0x40 Output/startup_stm32f10x_md.o
+                0x08000198                Reset_Handler
+ .text.Default_Handler
+                0x080001d8        0x4 Output/startup_stm32f10x_md.o
+                0x080001da                EXTI2_IRQHandler
+                0x080001da                DebugMon_Handler
+                0x080001da                TIM1_CC_IRQHandler
+                0x080001da                HardFault_Handler
+                0x080001da                SysTick_Handler
+                0x080001da                PVD_IRQHandler
+                0x080001da                PendSV_Handler
+                0x080001da                NMI_Handler
+                0x080001da                EXTI3_IRQHandler
+                0x080001da                USB_HP_CAN_TX_IRQHandler
+                0x080001da                EXTI0_IRQHandler
+                0x080001da                I2C2_EV_IRQHandler
+                0x080001da                UsageFault_Handler
+                0x080001da                ADC1_2_IRQHandler
+                0x080001da                SPI1_IRQHandler
+                0x080001da                CAN_SCE_IRQHandler
+                0x080001da                TAMPER_IRQHandler
+                0x080001da                DMA1_Channel4_IRQHandler
+                0x080001da                USART3_IRQHandler
+                0x080001da                RTC_IRQHandler
+                0x080001da                DMA1_Channel7_IRQHandler
+                0x080001da                TIM4_IRQHandler
+                0x080001da                CAN_RX1_IRQHandler
+                0x080001da                I2C1_EV_IRQHandler
+                0x080001da                DMA1_Channel6_IRQHandler
+                0x080001da                TIM3_IRQHandler
+                0x080001da                RCC_IRQHandler
+                0x080001da                TIM1_TRG_COM_IRQHandler
+                0x080001da                DMA1_Channel1_IRQHandler
+                0x080001da                EXTI15_10_IRQHandler
+                0x080001da                EXTI9_5_IRQHandler
+                0x080001da                SPI2_IRQHandler
+                0x080001da                USB_LP_CAN_RX0_IRQHandler
+                0x080001da                MemManage_Handler
+                0x080001da                SVC_Handler
+                0x080001da                DMA1_Channel5_IRQHandler
+                0x080001da                EXTI4_IRQHandler
+                0x080001da                DMA1_Channel3_IRQHandler
+                0x080001da                TIM1_UP_IRQHandler
+                0x080001da                WWDG_IRQHandler
+                0x080001da                TIM2_IRQHandler
+                0x080001da                TIM1_BRK_IRQHandler
+                0x080001da                EXTI1_IRQHandler
+                0x080001da                RTCAlarm_IRQHandler
+                0x080001da                USART2_IRQHandler
+                0x080001da                I2C2_ER_IRQHandler
+                0x080001da                DMA1_Channel2_IRQHandler
+                0x080001da                FLASH_IRQHandler
+                0x080001da                BusFault_Handler
+                0x080001da                USART1_IRQHandler
+                0x080001da                I2C1_ER_IRQHandler
+                0x080001da                USBWakeUp_IRQHandler
+ *(.rodata*)
+                0x080001dc                _etext = .
+
+.glue_7         0x080001dc        0x0
+ .glue_7        0x080001dc        0x0 linker stubs
+
+.glue_7t        0x080001dc        0x0
+ .glue_7t       0x080001dc        0x0 linker stubs
+
+.vfp11_veneer   0x080001dc        0x0
+ .vfp11_veneer  0x080001dc        0x0 linker stubs
+
+.v4_bx          0x080001dc        0x0
+ .v4_bx         0x080001dc        0x0 linker stubs
+
+.iplt           0x080001dc        0x0
+ .iplt          0x080001dc        0x0 Output/main.o
+
+.rel.dyn        0x080001dc        0x0
+ .rel.iplt      0x080001dc        0x0 Output/main.o
+
+.data           0x20000000        0x0 load address 0x080001dc
+                0x20000000                _sdata = .
+ *(.data*)
+ .data          0x20000000        0x0 Output/main.o
+ .data          0x20000000        0x0 Output/GPIO.o
+ .data          0x20000000        0x0 Output/startup_stm32f10x_md.o
+                0x20000000                _edata = .
+
+.igot.plt       0x20000000        0x0 load address 0x080001dc
+ .igot.plt      0x20000000        0x0 Output/main.o
+
+.bss            0x20000000        0x0 load address 0x080001dc
+                0x20000000                _sbss = .
+ *(.bss*)
+ .bss           0x20000000        0x0 Output/main.o
+ .bss           0x20000000        0x0 Output/GPIO.o
+ .bss           0x20000000        0x0 Output/startup_stm32f10x_md.o
+ *(COMMON)
+                0x20000000                _ebss = .
+
+._user_stack    0x20000000        0x0
+                0x20000000                . = ALIGN (0x8)
+                0x20005000                _estack = (ORIGIN (RAM) + LENGTH (RAM))
+                0x080001dc                _sidata = LOADADDR (.data)
+OUTPUT(Output/GPIO.elf elf32-littlearm)
+LOAD linker stubs
+
+.comment        0x00000000       0x49
+ .comment       0x00000000       0x49 Output/main.o
+                                 0x4a (size before relaxing)
+ .comment       0x00000049       0x4a Output/GPIO.o
+
+.ARM.attributes
+                0x00000000       0x2b
+ .ARM.attributes
+                0x00000000       0x2d Output/main.o
+ .ARM.attributes
+                0x0000002d       0x2d Output/GPIO.o
+ .ARM.attributes
+                0x0000005a       0x21 Output/startup_stm32f10x_md.o
