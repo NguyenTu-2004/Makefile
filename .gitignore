@@ -1,0 +1,7 @@
+# .gitignore
+*.o
+*.elf
+*.bin
+*.map
+Tools/
+.vscode/
