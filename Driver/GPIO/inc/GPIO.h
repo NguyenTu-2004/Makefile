@@ -3,17 +3,33 @@
 
 #include <stdint.h>
 
-/* Base address RCC + GPIOC (theo Reference Manual STM32F103x8) */
-#define RCC_APB2ENR   (*((volatile uint32_t*)0x40021018))
-#define GPIOC_CRH     (*((volatile uint32_t*)0x40011004))
-#define GPIOC_BSRR    (*((volatile uint32_t*)0x40011010))
-#define GPIOC_BRR     (*((volatile uint32_t*)0x40011014))
+typedef struct 
+{
+   volatile uint32_t CRL;
+   volatile uint32_t CRH;
+   volatile uint32_t IDR;
+   volatile uint32_t ODR;
+   volatile uint32_t BSRR;
+   volatile uint32_t BRR;
+   volatile uint32_t LCKR;
+}GPIO_Reg;
 
-/* Hàm khởi tạo GPIO */
-void GPIO_Init_PC13(void);
+typedef struct{
+    uint8_t PinNumber;
+    uint8_t Mode;
+    uint8_t Speed;
+}GPIO_Config;
 
-/* Hàm điều khiển LED */
-void GPIO_Set_PC13(void);   // Output = 1 (LED tắt)
-void GPIO_Reset_PC13(void); // Output = 0 (LED bật)
+typedef struct{
+    GPIO_Reg *GPIOx;
+    GPIO_Config GPIO_PinConfig;
+}GPIO_Handle;
+
+#define GPIOA ((GPIO_Reg *)0x40010800)
+#define GPIOB ((GPIO_Reg *)0x40010C00)
+#define GPIOC ((GPIO_Reg *)0x40011000)
+
+void GPIO_Init(GPIO_Handle *GPIOx);
+void GPIO_WritePin(GPIO_Reg *GPIOx, uint8_t PinNumber, uint8_t Value);
 
 #endif

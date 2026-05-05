@@ -8,7 +8,7 @@ INC_DIRS += Driver/GPIO/inc \
 SRC_DIRS += Driver/GPIO/src
 
 CHIP=cortex-m3
-CCFLAGS= -c -mcpu=$(CHIP) -mthumb -std=gnu11 -O0 -I$(INC_DIR)
+CCFLAGS= -c -mcpu=$(CHIP) -mthumb -std=gnu11 -O0 -I$(INC_DIRS)
 ASFLAGS = -mcpu=$(CHIP) -mthumb
 LDFLAGS= -nostdlib -T $(LD_FILE) -Wl,-Map=Output/GPIO.map
 

@@ -1,19 +1,32 @@
 #include "GPIO.h"
 
-void GPIO_Init_PC13(void) {
-    /* Bật clock cho Port C (bit 4 = IOPCEN) */
-    RCC_APB2ENR |= (1 << 4);
+void GPIO_Init(GPIO_Handle *pGPIOHandle) {
+    uint32_t temp = 0; 
 
-    /* Cấu hình PC13 output push-pull, tốc độ 2MHz
-       PC13 nằm trong CRH (bits [23:20]) */
-    GPIOC_CRH &= ~(0xF << 20);
-    GPIOC_CRH |=  (0x2 << 20); // MODE13 = 10 (Output 2MHz), CNF13 = 00 (Push-pull)
+    uint8_t config_value = (pGPIOHandle->GPIO_PinConfig.Mode << 2) | pGPIOHandle->GPIO_PinConfig.Speed;
+
+    if (pGPIOHandle->GPIO_PinConfig.PinNumber < 8) {
+        uint8_t shift_amount = pGPIOHandle->GPIO_PinConfig.PinNumber * 4;
+
+        temp = pGPIOHandle->GPIOx->CRL;        
+        temp &= ~(0xF << shift_amount);         
+        temp |= (config_value << shift_amount); 
+        pGPIOHandle->GPIOx->CRL = temp;        
+    } else {
+        uint8_t shift_amount = (pGPIOHandle->GPIO_PinConfig.PinNumber - 8) * 4;
+
+        temp = pGPIOHandle->GPIOx->CRH;        
+        temp &= ~(0xF << shift_amount);         
+        temp |= (config_value << shift_amount); 
+        pGPIOHandle->GPIOx->CRH = temp;        
+    }
 }
 
-void GPIO_Set_PC13(void) {
-    GPIOC_BSRR = (1 << 13); // PC13 = 1 (LED OFF)
+void GPIO_WritePin(GPIO_Reg *GPIOx, uint8_t PinNumber, uint8_t Value) {
+    if (Value) {
+        GPIOx->BSRR = (1 << PinNumber); 
+    } else {
+        GPIOx->BRR = (1 << PinNumber);  
+    }
 }
 
-void GPIO_Reset_PC13(void) {
-    GPIOC_BRR = (1 << 13); // PC13 = 0 (LED ON)
-}
