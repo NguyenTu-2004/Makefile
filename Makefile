@@ -3,8 +3,8 @@ CC = $(GCC_DIR)/bin/arm-none-eabi-gcc
 AS = $(GCC_DIR)/bin/arm-none-eabi-as
 HEX = $(GCC_DIR)/arm-none-eabi/bin/objcopy.exe
 LD_FILE := Linker/stm_ls.ld
-INC_DIRS += Driver/GPIO/inc \
-			Driver/UART/inc
+INC_DIRS += -IDriver/GPIO/inc \
+			-IDriver/BASE/inc
 SRC_DIRS += Driver/GPIO/src
 
 CHIP=cortex-m3

@@ -1,4 +1,5 @@
 #include "GPIO.h"
+#include "stm32f103_base.h"
 
 static void delay(volatile uint32_t t) {
     while (t--) {
@@ -7,7 +8,7 @@ static void delay(volatile uint32_t t) {
 }
 
 int main(void) {
-    (*(volatile uint32_t*)0x40021018) |= (1 << 4); // Enable clock for GPIOC
+    GPIO_PeriClockControl(GPIOC, ENABLE);
     GPIO_Handle UserLed;
     UserLed.GPIOx = GPIOC;
     UserLed.GPIO_PinConfig.PinNumber = 13;
@@ -17,10 +18,10 @@ int main(void) {
     GPIO_Init(&UserLed);
 
     while (1) {
-        GPIO_WritePin(GPIOC, 13, 1); // LED ON
+        GPIO_WritePin(GPIOC, GPIO_PIN_NO_13, SET); 
         delay(800000);
 
-        GPIO_WritePin(GPIOC, 13, 0);   // LED OFF
+        GPIO_WritePin(GPIOC, GPIO_PIN_NO_13, RESET);
         delay(800000);
     }
 }
